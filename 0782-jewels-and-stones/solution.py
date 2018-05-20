@@ -6,6 +6,7 @@ class Solution(object):
         :rtype: int
         """
         counter = 0
+        J = set(J)
         for stone in S:
             if stone in J:
                 counter += 1
