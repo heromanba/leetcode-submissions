@@ -1,14 +1,14 @@
 // Definition for singly-linked list.
-struct SinglyListNode {
+struct DoublyListNode {
     int val;
-    SinglyListNode *next;
-    SinglyListNode(int x) : val(x), next(NULL) {}
+    DoublyListNode *next, *prev;
+    DoublyListNode(int x) : val(x), next(NULL), prev(NULL) {}
 };
 
 
 class MyLinkedList {
 public:
-    SinglyListNode* head = nullptr;
+    DoublyListNode* head = nullptr;
     int len = 0;
     
     /** Initialize your data structure here. */
@@ -24,7 +24,7 @@ public:
             return -1;
         }
         // Current node of non-empty list.
-        SinglyListNode* cur_node = head;
+        DoublyListNode* cur_node = head;
         for (int i = 0; i < index; i++)
         {
             cur_node = cur_node->next;
@@ -36,8 +36,10 @@ public:
     After the insertion, the new node will be the first node of the linked list. */
     void addAtHead(int val) {
         
-        SinglyListNode* cur_node = new SinglyListNode(val);
+        DoublyListNode* cur_node = new DoublyListNode(val);
         cur_node->next = head;
+        if (head != NULL)
+            head->prev = cur_node;
         head = cur_node;
         len++;    // Update length.
     }
@@ -52,7 +54,7 @@ public:
         }
         
         // Non empty list.
-        SinglyListNode* cur_node = head;
+        DoublyListNode* cur_node = head;
         
         while (cur_node->next != nullptr)
         {
@@ -61,16 +63,16 @@ public:
         }
         
         // Create a new node.
-        SinglyListNode* new_node = new SinglyListNode(val);
+        DoublyListNode* new_node = new DoublyListNode(val);
         
         // Current node is the last node.
         // Append the new node.
         cur_node->next = new_node;
-        
+        new_node->prev = cur_node;
         len++;    // Update length.
     }
     
-    void printList(SinglyListNode* cur_node)
+    void printList(DoublyListNode* cur_node)
     {
         while (cur_node->next != nullptr)
         {
@@ -95,22 +97,33 @@ public:
             addAtHead(val);
             return;
         }
+        if (index == len)
+        {
+            addAtTail(val);
+            return;
+        }
         // Non empty list.
-        SinglyListNode* cur_node = head;
-        for (int i = 0; i < index -1; i++)
+        DoublyListNode* cur_node = head;
+        for (int i = 0; i < index; i++)
         {
             cur_node = cur_node->next;
         }
         
         // Create a new node.
-        SinglyListNode* new_node = new SinglyListNode(val);
+        DoublyListNode* new_node = new DoublyListNode(val);
         
-        // cur_node is (index - 1)-th node.
+        // prev_node is (index - 1)-th node.
+        // cur_node is index-th node.
+        // next_node is (index + 1)-th node.
+        DoublyListNode* prev_node = cur_node->prev;
+        DoublyListNode* next_node = cur_node->next;
+        
         // Link index-th node as next of new node.
-        new_node->next = cur_node->next;
+        new_node->next = cur_node;
+        new_node->prev = prev_node;
         
-        // Link new node as next of (index - 1)-th node.
-        cur_node->next = new_node;
+        cur_node->prev = new_node;
+        prev_node->next = new_node;
                 
         len++;    // Update length.
         return;
@@ -132,17 +145,20 @@ public:
             return;
         }
         // Non empty list and length is at least 2.
-        SinglyListNode* prev_node = head;
-        for (int i = 0; i < index -1; i++)
+        DoublyListNode* cur_node = head;
+        for (int i = 0; i < index; i++)
         {
-            prev_node = prev_node->next;
+            cur_node = cur_node->next;
         }
         // prev_node is (index - 1)-th node.
         // cur_node is index-th node.
         // next_node is (index + 1)-th node.
-        SinglyListNode* cur_node = prev_node->next;
-        SinglyListNode* next_node = cur_node->next;
-        prev_node->next = next_node;
+        DoublyListNode* prev_node = cur_node->prev;
+        DoublyListNode* next_node = cur_node->next;
+        if (prev_node != NULL)
+            prev_node->next = next_node;
+        if (next_node != NULL)
+            next_node->prev = prev_node;
         delete cur_node;
         
         len--;    // Update length.
