@@ -10,25 +10,30 @@
  * };
  */
 class Solution {
+private:
+    void goAlongLeftBranch(TreeNode* x, stack<TreeNode* >& S)
+    {
+        while(x) 
+        {
+            S.push(x);
+            x = x->left;
+        }
+    }
 public:
     vector<int> inorderTraversal(TreeNode* root) {
-        vector<int> vec_root;
-        if (root == NULL)
-            return vec_root;
+        vector<int> visited;
+        TreeNode* x = root;
+        stack<TreeNode* > S;
         
-        vector<int> vec_left;
-        vector<int> vec_right;
-        
-        if (root->left != NULL)
-            vec_left = inorderTraversal(root->left);
-        vec_root.insert(vec_root.end(), vec_left.begin(), vec_left.end());
-        
-        vec_root.push_back(root->val);
-        
-        if (root->right != NULL)
-            vec_right = inorderTraversal(root->right);
-        vec_root.insert(vec_root.end(), vec_right.begin(), vec_right.end());
-        
-        return vec_root;
+        while (true)
+        {
+            goAlongLeftBranch(x, S);
+            if (S.empty()) break;
+            x = S.top();
+            S.pop();
+            visited.push_back(x->val);
+            x = x->right;
+        }
+        return visited;
     }
 };
