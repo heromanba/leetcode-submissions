@@ -10,25 +10,44 @@
  * };
  */
 class Solution {
+private:
+    bool isChild(TreeNode* child, TreeNode* parent)
+    {
+        return (parent->left == child) || (parent->right == child);
+        
+    }
+    
+    void gotoHLVFL(stack<TreeNode* >& S)
+    {
+        while (TreeNode* x = S.top())
+        {
+            if (x->left)
+            {
+                if (x->right)
+                    S.push(x->right);
+                S.push(x->left);
+            } else
+                S.push(x->right);
+        }
+        S.pop();    
+    }
+    
 public:
     vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> visited;
+        stack<TreeNode* > S;
+        TreeNode* x = root;
         
-        vector<int> vec_root;
-        if (root == NULL)
-            return vec_root;
+        if (x) S.push(x);
         
-        vector<int> vec_left;
-        vector<int> vec_right;
-        
-        if (root->left != NULL)
-            vec_left = postorderTraversal(root->left);
-        vec_root.insert(vec_root.end(), vec_left.begin(), vec_left.end());
-               
-        if (root->right != NULL)
-            vec_right = postorderTraversal(root->right);
-        vec_root.insert(vec_root.end(), vec_right.begin(), vec_right.end());
-        
-        vec_root.push_back(root->val);
-        return vec_root;
+        while (!S.empty())
+        {
+            if (!isChild(x, S.top()))
+                gotoHLVFL(S);
+            x = S.top();
+            S.pop();
+            visited.push_back(x->val);
+        }
+        return visited;
     }
 };
