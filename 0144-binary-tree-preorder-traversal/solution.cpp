@@ -10,25 +10,32 @@
  * };
  */
 class Solution {
+private:
+    void visitAlongLeftBranch(
+        TreeNode* x,  
+        vector<int>& visited,
+        stack<TreeNode*>& S
+    )
+    {
+        while (x) {
+            visited.push_back( x->val );
+            S.push( x->right );
+            x = x->left;
+        }
+    }
+    
 public:
     vector<int> preorderTraversal(TreeNode* root) {
-        vector<int> vec_root;
-        if (root == NULL)
-            return vec_root;
+        vector<int> visited;
+        stack<TreeNode*> S;
         
-        vector<int> vec_left;
-        vector<int> vec_right;
-        
-        if (root->left != NULL)
-            vec_left = preorderTraversal(root->left);
-        if (root->right != NULL)
-            vec_right = preorderTraversal(root->right);
-        vec_root.push_back(root->val);
-        
-        vec_root.reserve(vec_root.size() + vec_left.size() + vec_right.size());
-        
-        vec_root.insert(vec_root.end(), vec_left.begin(), vec_left.end());
-        vec_root.insert(vec_root.end(), vec_right.begin(), vec_right.end());
-        return vec_root;
+        TreeNode* x = root;
+        while (true) {
+            visitAlongLeftBranch( x, visited, S );
+            if ( S.empty() ) break;
+            x = S.top();
+            S.pop();
+        }
+        return visited;
     }
 };
