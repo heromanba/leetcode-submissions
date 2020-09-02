@@ -5,7 +5,10 @@ class Solution(object):
         :type target: int
         :rtype: List[int]
         """
-        for idx, x in enumerate(nums):
-            for idy, y in enumerate(nums[idx + 1:]):
-                if x + y == target:
-                    return (idx, idy + idx + 1)
+        record = {}
+        for idx, n in enumerate(nums):
+            if target - n in record:
+                return [record[target - n], idx]
+            else:
+                record[n] = idx
+        return []
