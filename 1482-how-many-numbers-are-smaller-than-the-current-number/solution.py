@@ -1,15 +1,10 @@
 class Solution:
     def smallerNumbersThanCurrent(self, nums: List[int]) -> List[int]:
-        # store counts in a bucket.
-        counts = [0 for _ in range(101)]
+        l = [0] * 101
         for i in nums:
-            counts[i] += 1
-        for i in range(1, 101):
-            counts[i] += counts[i-1]
+            l[i] += 1
+        print(l)
         res = []
         for i in nums:
-            if i == 0:
-                res.append(0)
-            else:
-                res.append(counts[i-1])
+            res.append(sum(l[:i]))
         return res
