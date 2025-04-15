@@ -1,14 +1,15 @@
 class Solution:
+    
     def permute(self, nums: List[int]) -> List[List[int]]:
-        ret = []
-        def backtrack(candidates, curr_ret, target_len):
-            if target_len == 0:
-                ret.append(curr_ret)
-                return
-            for c in candidates:
-                new_curr = curr_ret + [c]
-                new_cand = [c for c in candidates if c not in new_curr]
-                backtrack(new_cand, new_curr, target_len-1)
+        self.ret = []
+        self.backtrack([], nums)
+        return self.ret
+
+    def backtrack(self, curr_list, nums):
+        if not nums:
+            self.ret.append(curr_list)
             return
-        backtrack(nums, [], len(nums))
-        return ret
+        for i in range(len(nums)):
+            tmp_list = curr_list[:]
+            tmp_list.append(nums[i])
+            self.backtrack(tmp_list, nums[:i]+nums[i+1:])
