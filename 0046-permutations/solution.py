@@ -1,15 +1,18 @@
 class Solution:
-    
     def permute(self, nums: List[int]) -> List[List[int]]:
-        self.ret = []
-        self.backtrack([], nums)
-        return self.ret
-
-    def backtrack(self, curr_list, nums):
-        if not nums:
-            self.ret.append(curr_list)
-            return
-        for i in range(len(nums)):
-            tmp_list = curr_list[:]
-            tmp_list.append(nums[i])
-            self.backtrack(tmp_list, nums[:i]+nums[i+1:])
+        res = []
+        
+        def backtrack(start):
+            if start == len(nums):
+                res.append(nums.copy())
+                return
+            for i in range(start, len(nums)):
+                # Swap elements at indices 'start' and 'i'
+                nums[start], nums[i] = nums[i], nums[start]
+                # Recurse for the next position
+                backtrack(start + 1)
+                # Undo the swap to backtrack
+                nums[start], nums[i] = nums[i], nums[start]
+        
+        backtrack(0)
+        return res
